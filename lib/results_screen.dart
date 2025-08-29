@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:instate_app/map_view_screen.dart';
 
 class ResultsScreen extends StatefulWidget {
   const ResultsScreen({super.key});
@@ -94,10 +95,14 @@ class _ResultsScreenState extends State<ResultsScreen> {
             ),
             onTap: () {
               // Navega a la pantalla del mapa y pasa el terreno seleccionado y todos los terrenos.
-              Navigator.pushNamed(
+              Navigator.push(
                 context,
-                '/map',
-                arguments: {'terrenos': _terrenos, 'selectedTerreno': terreno},
+                MaterialPageRoute(
+                  builder: (context) => MapViewScreen(
+                    terrenos: _terrenos,
+                    selectedTerreno: terreno,
+                  ),
+                ),
               );
             },
           ),

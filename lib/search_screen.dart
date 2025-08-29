@@ -1,8 +1,13 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:instate_app/results_screen.dart';
 
 class SearchScreen extends StatelessWidget {
   const SearchScreen({Key? key}) : super(key: key);
+
+  Future<void> _signOut() async {
+    await FirebaseAuth.instance.signOut();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -10,6 +15,9 @@ class SearchScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Búsqueda de Terrenos'),
         backgroundColor: Colors.blue,
+        actions: <Widget>[
+          IconButton(icon: const Icon(Icons.logout), onPressed: _signOut),
+        ],
       ),
       body: Center(
         child: Padding(

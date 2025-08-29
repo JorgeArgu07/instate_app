@@ -1,10 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:instate_app/auth_screen.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:instate_app/login_screen.dart';
+import 'package:instate_app/firebase_options.dart';
 import 'package:instate_app/map_view_screen.dart';
 import 'package:instate_app/search_screen.dart';
 
-void main() {
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:instate_app/widgets/auth_wrapper.dart';
+
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load(fileName: ".env"); // Carga las variables
+  // Inicializa Firebase con las opciones de la plataforma actual
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
   runApp(const MyApp());
 }
 
@@ -15,34 +26,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Diagnósticos de Terrenos MVP',
+      title: 'Diagnóstico de Terrenos',
       theme: ThemeData(
-        primarySwatch: Colors.indigo,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
+        useMaterial3: true,
       ),
-      // Se define la ruta inicial y las rutas nombradas.
-      initialRoute: '/',
-      routes: {
-        '/': (context) => const AuthScreen(),
-        '/search': (context) => const SearchScreen(),
-      },
-      // En lugar de una ruta nombrada, la pantalla del mapa se genera
-      // de forma dinámica para pasar el objeto del terreno seleccionado.
-      onGenerateRoute: (settings) {
-        if (settings.name == '/map') {
-          // El objeto del terreno seleccionado se pasa como argumento.
-          final args = settings.arguments as Map<String, dynamic>;
-          return MaterialPageRoute(
-            builder: (context) {
-              return MapViewScreen(
-                terrenos: args['terrenos'],
-                selectedTerreno: args['selectedTerreno'],
-              );
-            },
-          );
-        }
-        return null;
-      },
+      home: AuthWrapper(), // El widget que gestiona la vista de autenticación
     );
   }
 }
